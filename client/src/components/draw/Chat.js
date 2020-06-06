@@ -25,9 +25,11 @@ class Chat extends React.Component {
             if(this.state.socket != null){
                 this.state.socket.on('chat', function(data){
                     var output = document.getElementById("output");
-                    console.log(output);
+                    // console.log(output);
                     output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
                 })
+            }else{
+                alert("Failed to connect server.")
             }
         });
 
