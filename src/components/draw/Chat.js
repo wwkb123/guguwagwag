@@ -4,25 +4,31 @@ import io from 'socket.io-client'
 
 class Chat extends React.Component {
 
-    state = {
-        socket: null,
-        handle: "",
-        message: ""
-    }
+    
     constructor(){
         super();
+        this.state = {
+            socket: null,
+            handle: "",
+            message: ""
+        }
+
+    }
+    
+    componentDidMount(){
         // Make connection
-        var url = "https://guguwagwag.herokuapp.com/";
+        var url = "https://guguwagwag.herokuapp.com";
         this.setState({ socket: io.connect(url)});
 
-
+        console.log(this.state.socket);
         // Listen for events
         if(this.state.socket != null){
             this.state.socket.on('chat', function(data){
-                // output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
+                var output = document.getElementById("output");
+                console.log(output);
+                output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
             })
         }
-
     }
 
     onSendBtnClick = () => {

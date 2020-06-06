@@ -4,7 +4,7 @@ var socket = require('socket.io');
 
 // App setup
 var app = express();
-var server = app.listen(process.env.PORT || 5000, function(){
+var server = app.listen(process.env.PORT || 4000, function(){
   console.log("listening on port 4000.");
 })
 
