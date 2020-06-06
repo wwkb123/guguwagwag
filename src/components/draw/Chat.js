@@ -1,13 +1,13 @@
 import React from 'react';
 import '../../css/styles.css'
 import io from 'socket.io-client'
-import { Button, TextInput } from "react-bootstrap";
 
 class Chat extends React.Component {
 
     state = {
-        socket: null
-
+        socket: null,
+        handle: "",
+        message: ""
     }
     constructor(){
         super();
@@ -18,16 +18,24 @@ class Chat extends React.Component {
         // Listen for events
 
         this.state.socket.on('chat', function(data){
-            var output
-            output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
+            // output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
         })
     }
 
     onSendBtnClick = () => {
         this.state.socket.emit('chat', {
-            message: message.value,
-            handle: handle.value
+            message: this.state.message,
+            handle: this.state.handle
         })
+    }
+
+    handleChange = (e) => {
+        const { target } = e;
+    
+        this.setState(state => ({
+          ...state,
+          [target.id]: target.value,
+        }));
     }
 
 
@@ -37,9 +45,9 @@ class Chat extends React.Component {
                 <div id="chat-window">
                     <div id="output"></div>
                 </div>
-                <TextInput id="handle" type="text" placeholder="Handle"></TextInput>
-                <TextInput id="message" type="text" placeholder="Message"></TextInput>
-                <Button id="send" onClick={this.onSendBtnClick}>Send</Button>
+                <input id="handle" type="text" placeholder="Handle" onChange={this.handleChange}></input>
+                <input id="message" type="text" placeholder="Message" onChange={this.handleChange}></input>
+                <button id="send" onClick={this.onSendBtnClick}>Send</button>
             </div>
         );
     }
