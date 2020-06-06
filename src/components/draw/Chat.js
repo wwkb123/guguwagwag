@@ -18,17 +18,22 @@ class Chat extends React.Component {
     componentDidMount(){
         // Make connection
         var url = "https://guguwagwag.herokuapp.com";
-        this.setState({ socket: io.connect(url)});
+        // var url = "192.168.1.12:4000";
 
-        console.log(this.state.socket);
         // Listen for events
-        if(this.state.socket != null){
-            this.state.socket.on('chat', function(data){
-                var output = document.getElementById("output");
-                console.log(output);
-                output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
-            })
-        }
+        this.setState({ socket: io.connect(url)}, function(){
+            if(this.state.socket != null){
+                this.state.socket.on('chat', function(data){
+                    var output = document.getElementById("output");
+                    console.log(output);
+                    output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
+                })
+            }
+        });
+
+        // console.log(this.state);
+        
+        
     }
 
     onSendBtnClick = () => {
