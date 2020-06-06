@@ -7,7 +7,7 @@ import "./css/canvas.css";
 function App() {
   return (
     <div>
-      {/* <Chat></Chat> */}
+      <Chat></Chat>
       <h3 style={{ textAlign: "center" }}>Paint</h3>
       <div className="main">
         <div className="color-guide">
