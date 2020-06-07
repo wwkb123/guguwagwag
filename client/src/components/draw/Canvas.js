@@ -15,7 +15,7 @@ class Canvas extends Component {
     });
   }
   isPainting = false;
-  userStrokeStyle = "#FFFFFF";
+  userStrokeStyle = "#000000";
   guestStrokeStyle = "#F0C987";
   line = [];
   userId = v4();
@@ -99,7 +99,7 @@ class Canvas extends Component {
     return (
       <canvas
         ref={(ref) => (this.canvas = ref)}
-        style={{ background: "black" }}
+        style={{ background: "white", border: "1px solid lightgray" }}
         onMouseDown={this.onMouseDown}
         onMouseLeave={this.endPaintEvent}
         onMouseUp={this.endPaintEvent}

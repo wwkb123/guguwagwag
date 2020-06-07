@@ -15,7 +15,6 @@ h2{
     box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
     border-radius: 2px;
     height: 500px;
-    width: 400px;
     overflow-wrap: break-word;
 }
 
@@ -23,6 +22,19 @@ h2{
     height: 400px;
     overflow: auto;
     background: #f9f9f9;
+}
+
+.chat-input{
+    position: absolute;
+    bottom: 0;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
+    border: 1px solid lightgray;
+}
+
+#output{
+    width: 400px;
 }
 
 #output p{
@@ -98,10 +110,3 @@ h5 {
     color: white;
 }
 
-.chat-input{
-    position: absolute;
-    bottom: 0;
-    width: -moz-available;
-    width: -webkit-fill-available;
-    width: fill-available;
-}
