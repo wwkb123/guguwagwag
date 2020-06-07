@@ -122,7 +122,7 @@ class Canvas extends Component {
         if(this.state.socket != null){
             this.state.socket.on('draw', (data) => {
               this.paint(data.prevPos, data.currPos, data.strokeStyle);
-              console.log(data.prevPos, data.currPos, data.strokeStyle);
+              // console.log(data.prevPos, data.currPos, data.strokeStyle);
             })
         }else{
             console.log("Failed to connect server.");
