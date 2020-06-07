@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
 import Pusher from "pusher-js";
+import io from 'socket.io-client';
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
-
+    this.state = {
+      socket: null
+    }
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.endPaintEvent = this.endPaintEvent.bind(this);
@@ -13,6 +16,7 @@ class Canvas extends Component {
     this.pusher = new Pusher("PUSHER_KEY", {
       cluster: "eu",
     });
+    
   }
   isPainting = false;
   userStrokeStyle = "#000000";
@@ -36,8 +40,19 @@ class Canvas extends Component {
         stop: { ...offSetData },
       };
       this.line = this.line.concat(this.position);
-      this.paint(this.prevPos, offSetData, this.userStrokeStyle);
-      console.log(this.line);
+      // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
+
+              
+      if(this.state.socket != null){
+
+        this.state.socket.emit('draw', {
+          prevPos: this.prevPos,
+          currPos: offSetData,
+          strokeStyle: this.userStrokeStyle
+        }, (data) => {
+            // console.log("data sent", data);
+        });
+      }
     }
   }
 
@@ -95,6 +110,24 @@ class Canvas extends Component {
     //     });
     //   }
     // });
+    // this.paint({offsetX: 0, offsetY: 0}, {offsetX: 100, offsetY: 100}, this.userStrokeStyle);
+
+    // Make connection
+    var url = "https://guguwagwag.herokuapp.com";
+    // var url = "192.168.1.12:4000";
+
+    // Listen for events
+    this.setState({ socket: io.connect(url)}, function(){
+
+        if(this.state.socket != null){
+            this.state.socket.on('draw', (data) => {
+              this.paint(data.prevPos, data.currPos, data.strokeStyle);
+              console.log(data.prevPos, data.currPos, data.strokeStyle);
+            })
+        }else{
+            console.log("Failed to connect server.");
+        }
+    });
   }
 
   render() {

@@ -17,8 +17,8 @@ class Chat extends React.Component {
     
     componentDidMount(){
         // Make connection
-        // var url = "https://guguwagwag.herokuapp.com";
-        var url = "192.168.1.12:4000";
+        var url = "https://guguwagwag.herokuapp.com";
+        // var url = "192.168.1.12:4000";
 
         // Listen for events
         this.setState({ socket: io.connect(url)}, function(){

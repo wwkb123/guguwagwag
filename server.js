@@ -25,4 +25,9 @@ io.on('connection', function(socket){
         io.emit('chat', data);
         callback('success');
     });
+
+    socket.on('draw', function(data, callback){
+      io.emit('draw', data);
+      callback('success');
+  });
 })
