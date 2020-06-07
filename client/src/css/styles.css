@@ -8,12 +8,15 @@ h2{
     color: #575ed8;
 }
 
-#mario-chat{
-    max-width: 600px;
-    margin: 30px auto;
+#chat-area{
+    /* margin: 30px auto; */
+    background-color: #f9f9f9;
     border: 1px solid #ddd;
     box-shadow: 1px 3px 5px rgba(0,0,0,0.05);
     border-radius: 2px;
+    height: 500px;
+    width: 400px;
+    overflow-wrap: break-word;
 }
 
 #chat-window{
@@ -46,7 +49,7 @@ label{
 }
 
 input{
-    padding: 10px 20px;
+    /* padding: 10px 20px; */
     box-sizing: border-box;
     background: #eee;
     border: 0;
@@ -66,4 +69,39 @@ button{
     padding: 12px 0;
     width: 100%;
     border-radius: 0 0 2px 2px;
+}
+.main {
+    display: flex;
+    margin: 20px 40px;
+}
+
+.color-guide {
+    margin: 20px 40px;
+}
+
+h5 {
+    margin-bottom: 10px;
+}
+
+.user {
+    padding: 7px 15px;
+    border-radius: 4px;
+    color: white;
+    font-size: 13px;
+    font-weight: bold;
+    background: #EE92C2;
+    margin: 10px 0;
+}
+
+.guest {
+    background: #F0C987;
+    color: white;
+}
+
+.chat-input{
+    position: absolute;
+    bottom: 0;
+    width: -moz-available;
+    width: -webkit-fill-available;
+    width: fill-available;
 }

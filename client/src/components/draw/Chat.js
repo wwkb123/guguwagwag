@@ -9,7 +9,7 @@ class Chat extends React.Component {
         super();
         this.state = {
             socket: null,
-            handle: "",
+            name: "",
             message: ""
         }
 
@@ -17,19 +17,18 @@ class Chat extends React.Component {
     
     componentDidMount(){
         // Make connection
-        var url = "https://guguwagwag.herokuapp.com";
-        // var url = "192.168.1.12:4000";
+        // var url = "https://guguwagwag.herokuapp.com";
+        var url = "192.168.1.12:4000";
 
         // Listen for events
         this.setState({ socket: io.connect(url)}, function(){
+            var output = document.getElementById("output");
             if(this.state.socket != null){
                 this.state.socket.on('chat', function(data){
-                    var output = document.getElementById("output");
-                    // console.log(output);
-                    output.innerHTML += "<p><strong>" + data.handle + ": </strong>" + data.message + "</p>";
+                    output.innerHTML += "<p><strong>" + data.name + ": </strong>" + data.message + "</p>";
                 })
             }else{
-                alert("Failed to connect server.")
+                output.innerHTML = ("Failed to connect server.")
             }
         });
 
@@ -39,11 +38,20 @@ class Chat extends React.Component {
     }
 
     onSendBtnClick = () => {
+        var messageToSend = this.state.message;
+        var nameToSend = this.state.name;
+        if(messageToSend === "" || nameToSend === "") return;
+        this.setState({message: ""});
+        
         if(this.state.socket != null){
             this.state.socket.emit('chat', {
-                message: this.state.message,
-                handle: this.state.handle
-            })
+                message: messageToSend,
+                name: nameToSend
+            }, (data) => {
+                console.log("data sent", data);
+                var output = document.getElementById('output');
+                output.scrollTop = output.scrollHeight;
+            });
         }
     }
 
@@ -59,13 +67,17 @@ class Chat extends React.Component {
 
     render() {
         return (
-            <div id="mario-chat">
+            <div id="chat-area">
                 <div id="chat-window">
                     <div id="output"></div>
+                    <div className="chat-input">
+                        <input id="name" type="text" placeholder="Name" value={this.state.name} onChange={this.handleChange}></input>
+                        <input id="message" type="text" placeholder="Message" value={this.state.message} onChange={this.handleChange}></input>
+                        <button id="send" onClick={this.onSendBtnClick}>Send</button>
+                    </div>
+                    
                 </div>
-                <input id="handle" type="text" placeholder="Handle" onChange={this.handleChange}></input>
-                <input id="message" type="text" placeholder="Message" onChange={this.handleChange}></input>
-                <button id="send" onClick={this.onSendBtnClick}>Send</button>
+                
             </div>
         );
     }

@@ -3,22 +3,29 @@ import logo from "./logo.svg";
 import "./App.css";
 import Chat from "./components/draw/Chat";
 import Canvas from "./components/draw/Canvas";
-import "./css/canvas.css";
+
+
+import { Row, Col } from 'react-simple-flex-grid';
+import "react-simple-flex-grid/lib/main.css";
+
 function App() {
   return (
     <div>
-      <Chat></Chat>
-      <h3 style={{ textAlign: "center" }}>Paint</h3>
       <div className="main">
-        <div className="color-guide">
-          <h5>Color Guide</h5>
-          <div className="user user">User</div>
-          <div className="user guest">Guest</div>
-        </div>
-
-        <Canvas />
+        {/* <h3 style={{ textAlign: "center" }}>Paint</h3>
+          <div className="color-guide">
+            <h5>Color Guide</h5>
+            <div className="user user">User</div>
+            <div className="user guest">Guest</div>
+          </div>
+        </div> */}
+        <Row>
+          <Col span={8}><Canvas /></Col>
+          <Col span={4}><Chat /></Col>
+        </Row>  
       </div>
     </div>
+ 
   );
 }
 

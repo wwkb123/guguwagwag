@@ -21,7 +21,8 @@ var io = socket(server);
 io.on('connection', function(socket){
     console.log("made socket connection", socket.id);
 
-    socket.on('chat', function(data){
+    socket.on('chat', function(data, callback){
         io.emit('chat', data);
+        callback('success');
     });
 })

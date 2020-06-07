@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
 import Pusher from "pusher-js";
-import '../../css/canvas.css'
 
 class Canvas extends Component {
   constructor(props) {
@@ -16,7 +15,7 @@ class Canvas extends Component {
     });
   }
   isPainting = false;
-  userStrokeStyle = "#EE92C2";
+  userStrokeStyle = "#FFFFFF";
   guestStrokeStyle = "#F0C987";
   line = [];
   userId = v4();
@@ -85,15 +84,15 @@ class Canvas extends Component {
     this.ctx.lineCap = "round";
     this.ctx.lineWidth = 5;
 
-    const channel = this.pusher.subscribe("painting");
-    channel.bind("draw", (data) => {
-      const { userId, line } = data;
-      if (userId !== this.userId) {
-        line.forEach((position) => {
-          this.paint(position.start, position.stop, this.guestStrokeStyle);
-        });
-      }
-    });
+    // const channel = this.pusher.subscribe("painting");
+    // channel.bind("draw", (data) => {
+    //   const { userId, line } = data;
+    //   if (userId !== this.userId) {
+    //     line.forEach((position) => {
+    //       this.paint(position.start, position.stop, this.guestStrokeStyle);
+    //     });
+    //   }
+    // });
   }
 
   render() {
