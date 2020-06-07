@@ -37,13 +37,15 @@ class Canvas extends Component {
       };
       this.line = this.line.concat(this.position);
       this.paint(this.prevPos, offSetData, this.userStrokeStyle);
+      console.log(this.line);
     }
   }
 
   endPaintEvent() {
     if (this.isPainting) {
       this.isPainting = false;
-      this.sendPaintData();
+      // this.sendPaintData();
+      this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
     }
   }
 
