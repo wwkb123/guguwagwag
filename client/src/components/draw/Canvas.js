@@ -1,14 +1,15 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
 import Pusher from "pusher-js";
-import io from 'socket.io-client';
+import io from "socket.io-client";
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: null
-    }
+      socket: null,
+      userStrokeStyle: "#000000"
+    };
     this.onMouseDown = this.onMouseDown.bind(this);
     this.onMouseMove = this.onMouseMove.bind(this);
     this.endPaintEvent = this.endPaintEvent.bind(this);
@@ -16,7 +17,6 @@ class Canvas extends Component {
     this.pusher = new Pusher("PUSHER_KEY", {
       cluster: "eu",
     });
-    
   }
   isPainting = false;
   userStrokeStyle = "#000000";
@@ -31,12 +31,11 @@ class Canvas extends Component {
     let offsetY = e.touches[0].clientY;
     this.isPainting = true;
     this.prevPos = { offsetX, offsetY };
-  }
+  };
 
   onTouchMove = (e) => {
     e.preventDefault();
     if (this.isPainting) {
-
       let offsetX = e.touches[0].clientX;
       let offsetY = e.touches[0].clientY;
       const offSetData = { offsetX, offsetY };
@@ -47,20 +46,22 @@ class Canvas extends Component {
       this.line = this.line.concat(this.position);
       // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
 
-      
       // send to socket
-      if(this.state.socket != null){
-
-        this.state.socket.emit('draw', {
-          prevPos: this.prevPos,
-          currPos: offSetData,
-          strokeStyle: this.userStrokeStyle
-        }, (data) => {
+      if (this.state.socket != null) {
+        this.state.socket.emit(
+          "draw",
+          {
+            prevPos: this.prevPos,
+            currPos: offSetData,
+            strokeStyle: this.userStrokeStyle,
+          },
+          (data) => {
             // console.log("data sent", data);
-        });
+          }
+        );
       }
     }
-  }
+  };
 
   onTouchLeave = (e) => {
     e.preventDefault();
@@ -69,23 +70,27 @@ class Canvas extends Component {
       // this.sendPaintData();
       // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
       // send to socket
-      if(this.state.socket != null){
-
-        this.state.socket.emit('draw', {
-          prevPos: this.prevPos,
-          currPos: this.prevPos,
-          strokeStyle: this.userStrokeStyle
-        }, (data) => {
+      if (this.state.socket != null) {
+        this.state.socket.emit(
+          "draw",
+          {
+            prevPos: this.prevPos,
+            currPos: this.prevPos,
+            strokeStyle: this.userStrokeStyle,
+          },
+          (data) => {
             // console.log("data sent", data);
-        });
+          }
+        );
       }
     }
-  }
+  };
 
   onMouseDown({ nativeEvent }) {
     const { offsetX, offsetY } = nativeEvent;
     this.isPainting = true;
     this.prevPos = { offsetX, offsetY };
+    console.log("mouse down");
   }
 
   onMouseMove({ nativeEvent }) {
@@ -99,20 +104,21 @@ class Canvas extends Component {
       this.line = this.line.concat(this.position);
       // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
 
-      
       // send to socket
-      if(this.state.socket != null){
-
-        this.state.socket.emit('draw', {
-          prevPos: this.prevPos,
-          currPos: offSetData,
-          strokeStyle: this.userStrokeStyle
-        }, (data) => {
+      if (this.state.socket != null) {
+        this.state.socket.emit(
+          "draw",
+          {
+            prevPos: this.prevPos,
+            currPos: offSetData,
+            strokeStyle: this.userStrokeStyle,
+          },
+          (data) => {
             // console.log("data sent", data);
-        });
+          }
+        );
       }
-
-
+      console.log("mouse move");
     }
   }
 
@@ -121,15 +127,18 @@ class Canvas extends Component {
       this.isPainting = false;
       // this.sendPaintData();
       // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
-      if(this.state.socket != null){
-
-        this.state.socket.emit('draw', {
-          prevPos: this.prevPos,
-          currPos: this.prevPos,
-          strokeStyle: this.userStrokeStyle
-        }, (data) => {
+      if (this.state.socket != null) {
+        this.state.socket.emit(
+          "draw",
+          {
+            prevPos: this.prevPos,
+            currPos: this.prevPos,
+            strokeStyle: this.userStrokeStyle,
+          },
+          (data) => {
             // console.log("data sent", data);
-        });
+          }
+        );
       }
     }
   }
@@ -165,19 +174,17 @@ class Canvas extends Component {
 
   onClearClick = () => {
     // send to socket
-    if(this.state.socket != null){
-
-      this.state.socket.emit('draw_clear', {
-      }, (data) => {
-          // console.log("data sent", data);
+    if (this.state.socket != null) {
+      this.state.socket.emit("draw_clear", {}, (data) => {
+        // console.log("data sent", data);
       });
     }
-  }
+  };
 
   clearCanvas = () => {
     const ctx = this.canvas.getContext("2d");
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-  }
+  };
 
   componentDidMount() {
     this.canvas.width = 800;
@@ -203,19 +210,18 @@ class Canvas extends Component {
     // var url = "192.168.1.12:4000";
 
     // Listen for events
-    this.setState({ socket: io.connect(url)}, function(){
-
-        if(this.state.socket != null){
-            this.state.socket.on('draw', (data) => {
-              this.paint(data.prevPos, data.currPos, data.strokeStyle);
-              // console.log(data.prevPos, data.currPos, data.strokeStyle);
-            });
-            this.state.socket.on('draw_clear', (data) => {
-              this.clearCanvas();
-            });
-        }else{
-            console.log("Failed to connect server.");
-        }
+    this.setState({ socket: io.connect(url) }, function () {
+      if (this.state.socket != null) {
+        this.state.socket.on("draw", (data) => {
+          this.paint(data.prevPos, data.currPos, data.strokeStyle);
+          // console.log(data.prevPos, data.currPos, data.strokeStyle);
+        });
+        this.state.socket.on("draw_clear", (data) => {
+          this.clearCanvas();
+        });
+      } else {
+        console.log("Failed to connect server.");
+      }
     });
   }
 
@@ -229,7 +235,6 @@ class Canvas extends Component {
           onMouseLeave={this.endPaintEvent}
           onMouseUp={this.endPaintEvent}
           onMouseMove={this.onMouseMove}
-
           onTouchStart={this.onTouchStart}
           onTouchMove={this.onTouchMove}
           onTouchEnd={this.onTouchLeave}
@@ -237,8 +242,6 @@ class Canvas extends Component {
         />
         <button onClick={this.onClearClick}>Clear</button>
       </div>
-
-      
     );
   }
 }
