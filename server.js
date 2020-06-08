@@ -28,6 +28,10 @@ io.on('connection', function(socket){
 
     socket.on('draw', function(data, callback){
       io.emit('draw', data);
-      callback('success');
-  });
+    });
+
+    socket.on('draw_clear', function(data, callback){
+      io.emit('draw_clear', data);
+    });
+
 })
