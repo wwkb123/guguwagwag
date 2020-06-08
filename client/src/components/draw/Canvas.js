@@ -199,8 +199,8 @@ class Canvas extends Component {
     // this.paint({offsetX: 0, offsetY: 0}, {offsetX: 100, offsetY: 100}, this.userStrokeStyle);
 
     // Make connection
-    // var url = "https://guguwagwag.herokuapp.com";
-    var url = "192.168.1.12:4000";
+    var url = "https://guguwagwag.herokuapp.com";
+    // var url = "192.168.1.12:4000";
 
     // Listen for events
     this.setState({ socket: io.connect(url)}, function(){
