@@ -48,17 +48,14 @@ class Canvas extends Component {
 
       // send to socket
       if (this.state.socket != null) {
-        this.state.socket.emit(
-          "draw",
-          {
-            prevPos: this.prevPos,
-            currPos: offSetData,
-            strokeStyle: this.userStrokeStyle,
-          },
-          (data) => {
+        const stroke = {
+          prevPos: this.prevPos,
+          currPos: offSetData,
+          strokeStyle: this.userStrokeStyle,
+        }
+        this.state.socket.emit("draw", stroke, (data) => {
             // console.log("data sent", data);
-          }
-        );
+        });
       }
     }
   };
@@ -71,17 +68,14 @@ class Canvas extends Component {
       // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
       // send to socket
       if (this.state.socket != null) {
-        this.state.socket.emit(
-          "draw",
-          {
-            prevPos: this.prevPos,
-            currPos: this.prevPos,
-            strokeStyle: this.userStrokeStyle,
-          },
-          (data) => {
+        const stroke = {
+          prevPos: this.prevPos,
+          currPos: this.prevPos,
+          strokeStyle: this.userStrokeStyle
+        };
+        this.state.socket.emit("draw", stroke, (data) => {
             // console.log("data sent", data);
-          }
-        );
+        });
       }
     }
   };
@@ -106,17 +100,14 @@ class Canvas extends Component {
 
       // send to socket
       if (this.state.socket != null) {
-        this.state.socket.emit(
-          "draw",
-          {
-            prevPos: this.prevPos,
-            currPos: offSetData,
-            strokeStyle: this.userStrokeStyle,
-          },
-          (data) => {
+        const stroke = {
+          prevPos: this.prevPos,
+          currPos: offSetData,
+          strokeStyle: this.userStrokeStyle,
+        }
+        this.state.socket.emit("draw", stroke, (data) => {
             // console.log("data sent", data);
-          }
-        );
+        });
       }
       console.log("mouse move");
     }
@@ -128,17 +119,14 @@ class Canvas extends Component {
       // this.sendPaintData();
       // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
       if (this.state.socket != null) {
-        this.state.socket.emit(
-          "draw",
-          {
-            prevPos: this.prevPos,
-            currPos: this.prevPos,
-            strokeStyle: this.userStrokeStyle,
-          },
-          (data) => {
+        const stroke = {
+          prevPos: this.prevPos,
+          currPos: this.prevPos,
+          strokeStyle: this.userStrokeStyle,
+        }
+        this.state.socket.emit("draw", stroke, (data) => {
             // console.log("data sent", data);
-          }
-        );
+        });
       }
     }
   }
