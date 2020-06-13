@@ -13,23 +13,12 @@ export default class Login extends Component {
     return (
       <div>
         <form className="login-form" onSubmit={this.onSubmit}>
-          <div
-            className="container form-content"
-            style={{
-              width: "400px",
-              height: "400px",
-              boxShadow: "3px 3px 5px 6px #ccc",
-              marginTop: "50px",
-              marginLeft: "380px",
-              padding: "30px",
-              backgroundColor: "white",
-            }}
-          >
+          <div className="container form-content">
             <h1 className="">Login</h1>
             <div className="form-group" style={{ marginTop: "30px" }}>
               <input
                 type="username"
-                className="form-control"
+                className="form-control input-text"
                 name="username"
                 placeholder="username"
                 value={this.state.username}
@@ -39,7 +28,7 @@ export default class Login extends Component {
             <div className="form-group">
               <input
                 type="password"
-                className="form-control"
+                className="form-control input-text"
                 name="password"
                 placeholder="password"
                 value={this.state.password}

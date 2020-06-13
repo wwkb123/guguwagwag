@@ -1,0 +1,9 @@
+.form-content {
+    /* box-shadow: 3px 3px 4px 4px #ccc; */
+    background-color: white;
+    padding: 30px;
+}
+
+.input-text {
+    width: 70%;
+}
