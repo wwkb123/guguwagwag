@@ -1,13 +1,12 @@
 import React, { Component } from "react";
 import { v4 } from "uuid";
 import Pusher from "pusher-js";
-import io from "socket.io-client";
 
 class Canvas extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      socket: null,
+      socket: this.props.socket,
       userStrokeStyle: "#000000"
     };
     this.onMouseDown = this.onMouseDown.bind(this);
@@ -84,7 +83,6 @@ class Canvas extends Component {
     const { offsetX, offsetY } = nativeEvent;
     this.isPainting = true;
     this.prevPos = { offsetX, offsetY };
-    console.log("mouse down");
   }
 
   onMouseMove({ nativeEvent }) {
@@ -109,7 +107,6 @@ class Canvas extends Component {
             // console.log("data sent", data);
         });
       }
-      console.log("mouse move");
     }
   }
 
@@ -140,6 +137,7 @@ class Canvas extends Component {
     this.ctx.moveTo(x, y);
     this.ctx.lineTo(offsetX, offsetY);
     this.ctx.stroke();
+    this.ctx.closePath();
     this.prevPos = { offsetX, offsetY };
   }
 
@@ -193,24 +191,20 @@ class Canvas extends Component {
     // });
     // this.paint({offsetX: 0, offsetY: 0}, {offsetX: 100, offsetY: 100}, this.userStrokeStyle);
 
-    // Make connection
-    var url = "https://guguwagwag.herokuapp.com";
-    // var url = "192.168.1.12:4000";
 
     // Listen for events
-    this.setState({ socket: io.connect(url) }, function () {
-      if (this.state.socket != null) {
-        this.state.socket.on("draw", (data) => {
-          this.paint(data.prevPos, data.currPos, data.strokeStyle);
-          // console.log(data.prevPos, data.currPos, data.strokeStyle);
-        });
-        this.state.socket.on("draw_clear", (data) => {
-          this.clearCanvas();
-        });
-      } else {
-        console.log("Failed to connect server.");
-      }
-    });
+    if (this.state.socket != null) {
+      this.state.socket.on("draw", (data) => {
+        this.paint(data.prevPos, data.currPos, data.strokeStyle);
+        // console.log(data.prevPos, data.currPos, data.strokeStyle);
+      });
+      this.state.socket.on("draw_clear", (data) => {
+        this.clearCanvas();
+      });
+      console.log("Connected to server.");
+    } else {
+      console.log("Failed to connect server.");
+    }
   }
 
   render() {

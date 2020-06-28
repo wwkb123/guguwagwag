@@ -1,8 +1,8 @@
 import React from "react";
 import logo from "./logo.svg";
 import "./App.css";
-import Chat from "./components/draw/Chat";
-import Canvas from "./components/draw/Canvas";
+import Chat from "./components/room/Chat";
+import Canvas from "./components/room/Canvas";
 import Routes from "./Routes";
 
 import { Row, Col } from "react-simple-flex-grid";

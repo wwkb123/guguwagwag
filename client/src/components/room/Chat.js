@@ -1,14 +1,11 @@
 import React from 'react';
 import '../../css/styles.css'
-import io from 'socket.io-client'
 
 class Chat extends React.Component {
-
-    
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.state = {
-            socket: null,
+            socket: this.props.socket,
             name: "",
             message: ""
         }
@@ -16,25 +13,18 @@ class Chat extends React.Component {
     }
     
     componentDidMount(){
-        // Make connection
-        var url = "https://guguwagwag.herokuapp.com";
-        // var url = "192.168.1.12:4000";
+
 
         // Listen for events
-        this.setState({ socket: io.connect(url)}, function(){
-            var output = document.getElementById("output");
-            if(this.state.socket != null){
-                this.state.socket.on('chat', function(data){
-                    output.innerHTML += "<p><strong>" + data.name + ": </strong>" + data.message + "</p>";
-                })
-            }else{
-                output.innerHTML = ("Failed to connect server.")
-            }
-        });
 
-        // console.log(this.state);
-        
-        
+        var output = document.getElementById("output");
+        if(this.state.socket != null){
+            this.state.socket.on('chat', function(data){
+                output.innerHTML += "<p><strong>" + data.name + ": </strong>" + data.message + "</p>";
+            });
+        }else{
+            output.innerHTML = ("Failed to connect server.")
+        }
     }
 
     onSendBtnClick = () => {
