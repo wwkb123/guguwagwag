@@ -62,32 +62,52 @@ class Canvas extends Component {
     this.isPainting = true;
     this.prevPos = { offsetX, offsetY };
   };
+  
 
   onTouchMove = (e) => {
     e.preventDefault();
-    if (this.isPainting) {
-      let offsetX = e.touches[0].clientX;
-      let offsetY = e.touches[0].clientY;
-      const offSetData = { offsetX, offsetY };
-      this.position = {
-        start: { ...this.prevPos },
-        stop: { ...offSetData },
-      };
-      this.line = this.line.concat(this.position);
-      // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
+    // if (this.isPainting) {
+    //   let offsetX = e.touches[0].clientX;
+    //   let offsetY = e.touches[0].clientY;
+    //   const offSetData = { offsetX, offsetY };
+    //   this.position = {
+    //     start: { ...this.prevPos },
+    //     stop: { ...offSetData },
+    //   };
+    //   this.line = this.line.concat(this.position);
+    //   // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
 
-      // send to socket
-      if (this.state.socket != null) {
-        const stroke = {
-          prevPos: this.prevPos,
-          currPos: offSetData,
-          strokeStyle: this.userStrokeStyle,
-        }
-        this.state.socket.emit("draw", stroke, (data) => {
-            // console.log("data sent", data);
-        });
-      }
+    //   // send to socket
+    //   if (this.state.socket != null) {
+    //     const stroke = {
+    //       prevPos: this.prevPos,
+    //       currPos: offSetData,
+    //       strokeStyle: this.userStrokeStyle,
+    //     }
+    //     this.state.socket.emit("draw", stroke, (data) => {
+    //         // console.log("data sent", data);
+    //     });
+    //   }
+    // }
+
+    if (!this.state.isDrawing) {
+      return;
     }
+    this.setState(() => {
+      this.draw(
+        this.state.currentX,
+        this.state.currentY,
+        e.touches[0].clientX,
+        e.touches[0].clientY,
+        this.state.userStrokeStyle,
+        true,
+        e.touches[0].force
+      );
+      return {
+        currentX: e.touches[0].clientX,
+        currentY: e.touches[0].clientY
+      };
+    });
   };
 
   onTouchLeave = (e) => {
@@ -317,6 +337,21 @@ class Canvas extends Component {
       this.throttle(this.onMouseMove, 5),
       false
     );
+
+    
+    this.canvas.current.addEventListener(
+      "touchstart",
+      this.onMouseDown,
+      false
+    );
+
+    this.canvas.current.addEventListener(
+      "touchmove",
+      this.throttle(this.onTouchMove, 5),
+      false
+    );
+
+    this.canvas.current.addEventListener("touchend", this.onMouseUp, false);
 
   }
 
