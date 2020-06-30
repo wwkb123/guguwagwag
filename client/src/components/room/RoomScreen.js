@@ -9,52 +9,44 @@ class RoomScreen extends Component{
   constructor(props) {
     super(props);
     this.state = {
-      socket: null
+      socket: null,
+      isDataFetched: false
     }
+
   }
 
-  render() {
+  componentDidMount(){
     if(this.state.socket == null){
       // Make connection
       var url = "https://guguwagwag.herokuapp.com";
       // var url = "192.168.1.12:4000";
-
-      this.setState({ socket: io.connect(url) }, function () {
-        if (this.state.socket != null) {
-          return (
-            <div>
-              <Row>
-                <Col span={8}>
-                  <Canvas socket={this.state.socket} />
-                </Col>
-                <Col span={4}>
-                  <Chat socket={this.state.socket} />
-                </Col>
-              </Row>
-            </div>
-          );
-        } else {
-          console.log("Failed to connect server.");
-        }
+      
+      var socket = io(url);
+      this.setState({socket: socket, isDataFetched: true}, ()=>{
+        console.log(this.state.socket);
       });
-
-      return (
-        <div>Loading...</div>
-      );
-    }else{
-      return (
-        <div>
-          <Row>
-            <Col span={8}>
-              <Canvas socket={this.state.socket} />
-            </Col>
-            <Col span={4}>
-              <Chat socket={this.state.socket} />
-            </Col>
-          </Row>
-        </div>
-      );
+      
     }
+  }
+
+  componentWillUnmount() {
+    this.state.socket.close();
+  }
+
+  render() {
+    if(!this.state.isDataFetched) return(<div>Loading...</div>);
+    return (
+      <div>
+        <Row>
+          <Col span={8}>
+            <Canvas socket={this.state.socket} />
+          </Col>
+          <Col span={4}>
+            <Chat socket={this.state.socket} />
+          </Col>
+        </Row>
+      </div>
+    );
   }
 }
 export default RoomScreen;

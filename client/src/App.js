@@ -1,13 +1,11 @@
 import React from "react";
+import { Switch, Route } from "react-router-dom";
 import logo from "./logo.svg";
 import "./App.css";
-import Chat from "./components/room/Chat";
-import Canvas from "./components/room/Canvas";
-import Routes from "./Routes";
-
-import { Row, Col } from "react-simple-flex-grid";
 import "react-simple-flex-grid/lib/main.css";
-import { Link } from "react-router-dom";
+import LoginScreen from "./components/home/LoginScreen";
+import RoomScreen from "./components/room/RoomScreen";
+
 function App() {
   return (
     <div>
@@ -19,12 +17,13 @@ function App() {
             <div className="user guest">Guest</div>
           </div>
         </div> */}
-        {/* <Row>
-          <Col span={8}><Canvas /></Col>
-          <Col span={4}><Chat /></Col>
-        </Row>   */}
-        <Routes />
-        {/* <Link to="/game">game</Link> */}
+
+        <Switch>
+          <Route exact path="/" component={LoginScreen}></Route>
+          <Route exact path="/room" component={RoomScreen}></Route>
+         
+        </Switch>
+        
       </div>
     </div>
   );
