@@ -19,8 +19,6 @@ class Canvas extends Component {
     // Listen for events
     if (this.state.socket != null) {
       this.state.socket.on("draw", (data) => {
-        // this.paint(data.prevPos, data.currPos, data.strokeStyle);
-        // console.log(data.prevPos, data.currPos, data.strokeStyle)
         // let w = window.innerWidth;
         // let h = window.innerHeight;
   
@@ -50,91 +48,36 @@ class Canvas extends Component {
 
   }
 
-  guestStrokeStyle = "#F0C987";
   line = [];
   userId = v4();
-  prevPos = { offsetX: 0, offsetY: 0 };
 
-  onTouchStart = (e) => {
-    e.preventDefault();
-    let offsetX = e.touches[0].clientX;
-    let offsetY = e.touches[0].clientY;
-    this.isPainting = true;
-    this.prevPos = { offsetX, offsetY };
-  };
   
-
   onTouchMove = (e) => {
     e.preventDefault();
-    // if (this.isPainting) {
-    //   let offsetX = e.touches[0].clientX;
-    //   let offsetY = e.touches[0].clientY;
-    //   const offSetData = { offsetX, offsetY };
-    //   this.position = {
-    //     start: { ...this.prevPos },
-    //     stop: { ...offSetData },
-    //   };
-    //   this.line = this.line.concat(this.position);
-    //   // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
-
-    //   // send to socket
-    //   if (this.state.socket != null) {
-    //     const stroke = {
-    //       prevPos: this.prevPos,
-    //       currPos: offSetData,
-    //       strokeStyle: this.userStrokeStyle,
-    //     }
-    //     this.state.socket.emit("draw", stroke, (data) => {
-    //         // console.log("data sent", data);
-    //     });
-    //   }
-    // }
-
     if (!this.state.isDrawing) {
       return;
     }
+    var bcr = e.target.getBoundingClientRect();
+    console.log(e.touches[0]);
     this.setState(() => {
       this.draw(
         this.state.currentX,
         this.state.currentY,
-        e.touches[0].clientX,
-        e.touches[0].clientY,
+        e.touches[0].clientX - bcr.x,
+        e.touches[0].clientY - bcr.y,
         this.state.userStrokeStyle,
         true,
         e.touches[0].force
       );
       return {
-        currentX: e.touches[0].clientX,
-        currentY: e.touches[0].clientY
+        currentX: e.touches[0].clientX - bcr.x,
+        currentY: e.touches[0].clientY - bcr.y
       };
     });
   };
 
-  onTouchLeave = (e) => {
-    e.preventDefault();
-    if (this.isPainting) {
-      this.isPainting = false;
-      // this.sendPaintData();
-      // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
-      // send to socket
-      if (this.state.socket != null) {
-        const stroke = {
-          prevPos: this.prevPos,
-          currPos: this.prevPos,
-          strokeStyle: this.userStrokeStyle
-        };
-        this.state.socket.emit("draw", stroke, (data) => {
-            // console.log("data sent", data);
-        });
-      }
-    }
-  };
 
   onMouseDown = (e) => {
-    // const { offsetX, offsetY } = nativeEvent;
-    // this.isPainting = true;
-    // this.prevPos = { offsetX, offsetY };
-    
     this.setState(() => {
       return {
         currentX: e.offsetX,
@@ -145,28 +88,6 @@ class Canvas extends Component {
   }
 
   onMouseMove = (e) => {
-    // if (this.isPainting) {
-    //   const { offsetX, offsetY } = nativeEvent;
-    //   const offSetData = { offsetX, offsetY };
-    //   this.position = {
-    //     start: { ...this.prevPos },
-    //     stop: { ...offSetData },
-    //   };
-    //   this.line = this.line.concat(this.position);
-    //   // this.paint(this.prevPos, offSetData, this.userStrokeStyle);
-
-    //   // send to socket
-    //   if (this.state.socket != null) {
-    //     const stroke = {
-    //       prevPos: this.prevPos,
-    //       currPos: offSetData,
-    //       strokeStyle: this.userStrokeStyle,
-    //     }
-    //     this.state.socket.emit("draw", stroke, (data) => {
-    //         // console.log("data sent", data);
-    //     });
-    //   }
-    // }
     if (!this.state.isDrawing) {
       return;
     }
@@ -180,41 +101,16 @@ class Canvas extends Component {
   }
 
   onMouseUp = (e) => {
-    // if (this.isPainting) {
-    //   this.isPainting = false;
-    //   // this.sendPaintData();
-    //   // this.paint(this.prevPos, this.prevPos, this.userStrokeStyle);
-    //   if (this.state.socket != null) {
-    //     const stroke = {
-    //       prevPos: this.prevPos,
-    //       currPos: this.prevPos,
-    //       strokeStyle: this.userStrokeStyle,
-    //     }
-    //     this.state.socket.emit("draw", stroke, (data) => {
-    //         // console.log("data sent", data);
-    //     });
-    //   }
-    // }
     this.setState(() => {
       return {
         isDrawing: false,
         currentX: e.offsetX,
         currentY: e.offsetY
       };
-    });
+    }, this.draw(this.state.currentX, this.state.currentY, this.state.currentX, this.state.currentY, this.state.userStrokeStyle, true));
   }
 
   draw = (x0, y0, x1, y1, color, emit, force) => {
-    // const { offsetX, offsetY } = currPos;
-    // const { offsetX: x, offsetY: y } = prevPos;
-
-    // this.ctx.beginPath();
-    // this.ctx.strokeStyle = strokeStyle;
-    // this.ctx.moveTo(x, y);
-    // this.ctx.lineTo(offsetX, offsetY);
-    // this.ctx.stroke();
-    // this.ctx.closePath();
-    // this.prevPos = { offsetX, offsetY };
     if(this.state.canvas == null) return;
     let context = this.state.canvas.getContext("2d");
     context.beginPath();
@@ -255,23 +151,6 @@ class Canvas extends Component {
     });
   }
 
-  async sendPaintData() {
-    const body = {
-      line: this.line,
-      userId: this.userId,
-    };
-
-    const req = await fetch("http://localhost:4000/paint", {
-      method: "post",
-      body: JSON.stringify(body),
-      headers: {
-        "content-type": "application/json",
-      },
-    });
-    const res = await req.json();
-    this.line = [];
-  }
-
   onClearClick = () => {
     // send to socket
     if (this.state.socket != null) {
@@ -300,13 +179,6 @@ class Canvas extends Component {
   };
 
   componentDidMount() {
-    // this.canvas.width = 800;
-    // this.canvas.height = 500;
-    // this.ctx = this.state.canvas.getContext("2d");
-    // this.ctx.lineJoin = "round";
-    // this.ctx.lineCap = "round";
-    // this.ctx.lineWidth = 5;
-
     // const channel = this.pusher.subscribe("painting");
     // channel.bind("draw", (data) => {
     //   const { userId, line } = data;
@@ -338,7 +210,6 @@ class Canvas extends Component {
       false
     );
 
-    
     this.canvas.current.addEventListener(
       "touchstart",
       this.onMouseDown,
@@ -359,17 +230,8 @@ class Canvas extends Component {
     return (
       <div>
         <canvas
-          // ref={(ref) => (this.canvas = ref)}
           ref={this.canvas}
           style={{ background: "white", border: "1px solid lightgray" }}
-          // onMouseDown={this.onMouseDown}
-          // onMouseLeave={this.onMouseUp}
-          // onMouseUp={this.onMouseUp}
-          // onMouseMove={this.onMouseMove}
-          // onTouchStart={this.onTouchStart}
-          // onTouchMove={this.onTouchMove}
-          // onTouchEnd={this.onTouchLeave}
-          // onTouchCancel={this.onTouchLeave}
           height={500}
           width={800}
         />
